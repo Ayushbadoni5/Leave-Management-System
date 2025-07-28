@@ -52,7 +52,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity <UserDto> getMyProfile(Principal loggedInUser){
         UserDto user = userService.getMyProfile(loggedInUser.getName());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 }

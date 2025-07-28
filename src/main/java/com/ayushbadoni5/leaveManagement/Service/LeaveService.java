@@ -3,6 +3,7 @@ package com.ayushbadoni5.leaveManagement.Service;
 import com.ayushbadoni5.leaveManagement.DTOs.LeaveRequestDto;
 import com.ayushbadoni5.leaveManagement.DTOs.LeaveResponseDto;
 import com.ayushbadoni5.leaveManagement.DTOs.LeaveStatsDto;
+import com.ayushbadoni5.leaveManagement.Enums.LeaveStatus;
 
 import java.nio.file.AccessDeniedException;
 import java.security.Principal;
@@ -20,7 +21,7 @@ public interface LeaveService {
 
     LeaveResponseDto rejectLeave(Long leaveId);
 
-    List<LeaveStatsDto> getLeaveStatusOfUser(Long userId, Principal loggedInUser) throws AccessDeniedException;
+    List<LeaveStatsDto> getLeaveStatusOfUser(Long userId, Principal loggedInUser, LeaveStatus leaveStatus) throws AccessDeniedException;
 
     void cancelLeave(Long id, String email);
 }

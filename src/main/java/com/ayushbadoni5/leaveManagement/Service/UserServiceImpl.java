@@ -48,12 +48,6 @@ public class UserServiceImpl implements UserService{
         User targetUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-        boolean isAdmin = "ROLE_ADMIN".equalsIgnoreCase(loggedInUser.getRole().getRoleCode());
-        boolean isSelf = loggedInUser.getId().equals(targetUser.getId());
-
-        if (!isAdmin && !isSelf) {
-            throw new AccessDeniedException("You are not authorized to access this resource.");
-        }
 
         return UserDto.builder()
                 .id(targetUser.getId())
@@ -72,12 +66,6 @@ public class UserServiceImpl implements UserService{
 
         User targetUser = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("user","id",id));
 
-        boolean isAdmin = loggedInUser.getRole().getRoleCode().equalsIgnoreCase("ROLE_ADMIN");
-        boolean isSelf = loggedInUser.getId().equals(targetUser.getId());
-
-        if (!isAdmin && !isSelf){
-            throw new AccessDeniedException("You are not authorized to access this resource.");
-        }
 
         targetUser.setFirstName(userUpdateDto.getFirstName());
         targetUser.setLastName(userUpdateDto.getLastName());
@@ -103,12 +91,7 @@ public class UserServiceImpl implements UserService{
         User targetUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 
-        boolean isAdmin = loggedInUser.getRole().getRoleCode().equalsIgnoreCase("ROLE_ADMIN");
-        boolean isSelf = loggedInUser.getId().equals(targetUser.getId());
 
-        if (!isAdmin && !isSelf) {
-            throw new AccessDeniedException("You are not authorized to delete this user.");
-        }
 
         userRepository.delete(targetUser);
     }

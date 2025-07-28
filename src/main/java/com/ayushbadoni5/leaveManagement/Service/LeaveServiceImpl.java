@@ -139,22 +139,18 @@ public class LeaveServiceImpl implements LeaveService{
     }
 
     @Override
-    public List<LeaveStatsDto> getLeaveStatusOfUser(Long userId, Principal loggedInUser) throws AccessDeniedException {
+    public List<LeaveStatsDto> getLeaveStatusOfUser(Long userId, Principal loggedInUser,LeaveStatus leaveStatus) throws AccessDeniedException {
         User user = userRepository.findByEmail(loggedInUser.getName())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", loggedInUser.getName()));
 
-        boolean isAdmin = user.getRole().getRoleCode().equalsIgnoreCase("ROLE_ADMIN");
-        boolean isSelf = user.getId().equals(userId);
-
-        if (!isSelf && !isAdmin){
-            throw new AccessDeniedException("You are not authorized to access this data.");
-        }
 
 
         List<LeaveStatsDto> list = new ArrayList<>();
 
         for (LeaveType leaveType: LeaveType.values()){
-            int totalTaken = leaveRepository.countByUserIdAndLeaveType(userId,leaveType);
+
+
+            int totalTaken = leaveRepository.countByUserIdAndLeaveTypeAndLeaveStatus(userId,leaveType,LeaveStatus.APPROVED);
 
             int maxAllowed = getMaxAllowedLeave(leaveType);
 
@@ -168,9 +164,8 @@ public class LeaveServiceImpl implements LeaveService{
                     .build();
             list.add(stats);
         }
-       return list;
+        return list;
     }
-
 
 
     private int getMaxAllowedLeave(LeaveType leaveType) {

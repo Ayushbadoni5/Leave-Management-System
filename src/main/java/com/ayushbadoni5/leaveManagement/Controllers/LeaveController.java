@@ -3,6 +3,7 @@ package com.ayushbadoni5.leaveManagement.Controllers;
 import com.ayushbadoni5.leaveManagement.DTOs.LeaveRequestDto;
 import com.ayushbadoni5.leaveManagement.DTOs.LeaveResponseDto;
 import com.ayushbadoni5.leaveManagement.DTOs.LeaveStatsDto;
+import com.ayushbadoni5.leaveManagement.Enums.LeaveStatus;
 import com.ayushbadoni5.leaveManagement.Service.LeaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,25 +52,25 @@ public class LeaveController {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/approve")
+    @PostMapping("/{leaveID}/approve")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<LeaveResponseDto> approveLeave(@PathVariable Long userId){
-        LeaveResponseDto leave = leaveService.approveLeave(userId);
+    public ResponseEntity<LeaveResponseDto> approveLeave(@PathVariable Long leaveID){
+        LeaveResponseDto leave = leaveService.approveLeave(leaveID);
         return new ResponseEntity<>(leave,HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/reject")
+    @PostMapping("/{leaveID}/reject")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<LeaveResponseDto> rejectLeave(@PathVariable Long userId){
-        LeaveResponseDto leave = leaveService.rejectLeave(userId);
+    public ResponseEntity<LeaveResponseDto> rejectLeave(@PathVariable Long leaveID){
+        LeaveResponseDto leave = leaveService.rejectLeave(leaveID);
         return new ResponseEntity<>(leave,HttpStatus.OK);
     }
 
 
     @GetMapping("/stats/{userId}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<List<LeaveStatsDto>> myLeaveStatus(@PathVariable Long userId, Principal loggedInUser) throws AccessDeniedException {
-        List<LeaveStatsDto> list = leaveService.getLeaveStatusOfUser(userId,loggedInUser);
+    public ResponseEntity<List<LeaveStatsDto>> myLeaveStatus(@PathVariable Long userId, Principal loggedInUser, LeaveStatus leaveStatus) throws AccessDeniedException {
+        List<LeaveStatsDto> list = leaveService.getLeaveStatusOfUser(userId,loggedInUser, leaveStatus);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 }
